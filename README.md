@@ -1,78 +1,44 @@
-# CVE-2026-XXXX – SQL Injection in Student Management System
+# CVE-2026-XXXX – SQL Injection & Web Vulnerabilities in Student Management System
 
 ## Overview
 
-A SQL Injection vulnerability was identified in the **Student Management System** within the student update functionality. The issue is caused by unsafe concatenation of user-controlled input into SQL statements without the use of parameterized queries.
+Multiple web vulnerabilities, including **SQL Injection (SQLi)**, **Reflected/Stored Cross-Site Scripting (XSS)**, and **Insecure Credential Storage**, were identified in the **Student Management System** within the `updatestudent.php` component.
 
-This repository documents the vulnerability, its root cause, affected component, impact, and remediation guidance. The analysis was performed in an isolated laboratory environment for research and educational purposes.
+The primary SQL Injection vulnerability arises from direct, unaligned concatenation of user-supplied input via the `GET` parameter `eno` into database queries without sanitization or parameterized statements.
+
+This repository documents the root cause, technical proof of concept, impacted code segments, and recommended remediation guidance. The analysis was performed in an isolated laboratory environment for research and educational purposes.
 
 ---
 
 ## Vulnerability Information
 
-| Field                   | Value                                            |
-| ----------------------- | ------------------------------------------------ |
-| CVE                     | CVE-2026-XXXX                                    |
-| Vulnerability Type      | SQL Injection                                    |
-| CWE                     | CWE-89                                           |
-| Attack Vector           | Remote                                           |
-| Authentication Required | Depends on deployment                            |
-| Component               | Student Update Functionality                     |
-| Impact                  | Unauthorized database access and data disclosure |
-| Severity                | High                                             |
+| Field | Value |
+| :--- | :--- |
+| **CVE** | CVE-2026-XXXX |
+| **Vulnerability Type** | SQL Injection (CWE-89), Cross-Site Scripting (CWE-79), Cleartext Storage of Sensitive Information (CWE-312) |
+| **CWE** | CWE-89, CWE-79, CWE-312 |
+| **Attack Vector** | Network / Remote |
+| **Authentication Required** | Depends on deployment |
+| **Vulnerable Component** | `updatestudent.php` |
+| **Impact** | Unauthorized database access, session hijacking, data disclosure |
+| **Severity** | **High** |
 
 ---
 
-## Root Cause
+## Vulnerable Endpoint & Parameters
 
-The application constructs SQL queries by directly concatenating user-controlled input into database statements.
-
-This practice allows malicious input to alter the intended SQL query, potentially resulting in unauthorized access to application data.
-
-The vulnerability exists because user input is processed without parameterized queries or proper server-side validation.
+* **Endpoint:** `/updatestudent.php`
+* **HTTP Method:** `GET` / `POST`
+* **Vulnerable Parameter:** `eno` (`?eno=1 OR 1=1`)
 
 ---
 
-## Potential Impact
+## Technical Analysis & Root Cause
 
-Successful exploitation may allow an attacker to:
+### 1. SQL Injection (CWE-89)
 
-* Read unauthorized database records
-* Modify stored information
-* Enumerate database schema
-* Access sensitive application data
+The application assigns user input directly from `$_GET['eno']` to variable `$new3` without sanitization or parameterized queries:
 
-The actual impact depends on database permissions and application configuration.
-
----
-
-## Mitigation
-
-The issue can be mitigated by:
-
-* Using prepared statements
-* Implementing server-side input validation
-* Applying least-privilege database permissions
-* Escaping output where appropriate
-* Performing regular security code reviews
-
----
-
-## References
-
-* CWE-89 – SQL Injection
-* OWASP Top 10 – Injection
-* OWASP Web Security Testing Guide
-
----
-
-## Disclaimer
-
-This repository is intended solely for defensive security research, vulnerability analysis, and educational purposes. Testing should only be performed on systems for which explicit authorization has been obtained.
-
----
-
-## Author
-
-Herbert Hoffmann
-Security Researcher
+```php
+// Vulnerable Code Snippet
+$new3 = $_GET['eno'];$sql = "select * from studenttable where Eno=$new3";
