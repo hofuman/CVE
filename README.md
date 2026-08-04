@@ -2,7 +2,7 @@
 
 ## Overview
 
-Multiple web vulnerabilities, including **SQL Injection (SQLi)**, **Reflected/Stored Cross-Site Scripting (XSS)**, and **Insecure Credential Storage**, were identified in the **Student Management System** within the `updatestudent.php` component.
+Multiple web vulnerabilities, including **SQL Injection (SQLi)**, were identified in the **Student Management System** within the `updatestudent.php` component.
 
 The primary SQL Injection vulnerability arises from direct, unaligned concatenation of user-supplied input via the `GET` parameter `eno` into database queries without sanitization or parameterized statements.
 
@@ -14,8 +14,8 @@ This repository documents the root cause, technical proof of concept, impacted c
 
 | Field | Value |
 | :--- | :--- |
-| **Vulnerability Type** | SQL Injection (CWE-89), Cross-Site Scripting (CWE-79), Cleartext Storage of Sensitive Information (CWE-312) |
-| **CWE** | CWE-89, CWE-79, CWE-312 |
+| **Vulnerability Type** | SQL Injection (CWE-89)|
+| **CWE** | CWE-89 |
 | **Attack Vector** | Network / Remote |
 | **Authentication Required** | Low / User (Requires minimum privileges to access `updatestudent.php`) |
 | **Privileges Required** | Low (Basic student/user privileges) |
