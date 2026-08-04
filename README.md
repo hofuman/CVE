@@ -1,4 +1,4 @@
-# CVE-2026-XXXX – SQL Injection & Web Vulnerabilities in Student Management System
+# SQL Injection & Web Vulnerabilities in Student Management System
 
 ## Overview
 
