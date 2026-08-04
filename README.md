@@ -17,11 +17,12 @@ This repository documents the root cause, technical proof of concept, impacted c
 | **Vulnerability Type** | SQL Injection (CWE-89), Cross-Site Scripting (CWE-79), Cleartext Storage of Sensitive Information (CWE-312) |
 | **CWE** | CWE-89, CWE-79, CWE-312 |
 | **Attack Vector** | Network / Remote |
-| **Authentication Required** | Depends on deployment |
+| **Authentication Required** | Low / User (Requires minimum privileges to access `updatestudent.php`) |
+| **Privileges Required** | Low (Basic student/user privileges) |
 | **Vulnerable Component** | `updatestudent.php` |
 | **Impact** | Unauthorized database access, session hijacking, data disclosure |
 | **Severity** | **High** |
-| **Submitter** | @hofuman
+| **Submitter** | @hofuman |
 
 ---
 
@@ -37,11 +38,11 @@ This repository documents the root cause, technical proof of concept, impacted c
 
 ### 1. SQL Injection (CWE-89)
 
-The application assigns user input directly from `$_GET['eno']` to variable `$new3` without sanitization or parameterized queries:
+An attacker with minimum user privileges accessing the `updatestudent.php` endpoint can exploit this vulnerability. The application assigns user input directly from `$_GET['eno']` to variable `$new3` without sanitization or parameterized queries:
 
 ```php
 // Vulnerable Code Snippet
 $new3 = $_GET['eno'];$sql = "select * from studenttable where Eno=$new3";
 ```
-<img width="1161" height="573" alt="image" src="https://github.com/user-attachments/assets/99e4c253-228f-415b-b1d2-6a2c9e062f3e" />
 
+<img width="1161" height="573" alt="image" src="https://github.com/user-attachments/assets/99e4c253-228f-415b-b1d2-6a2c9e062f3e" />
